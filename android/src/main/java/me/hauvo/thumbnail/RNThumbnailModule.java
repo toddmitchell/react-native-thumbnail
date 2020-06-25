@@ -48,15 +48,22 @@ public class RNThumbnailModule extends ReactContextBaseJavaModule {
     String fullPath = outputPath.replace("file://","");
 
     try {
-      File dir = new File(fullPath);
+      File file = new File(fullPath);
+
+      if(!file.isFile())
+      {
+        throw new Exception("output path must be a file");
+      }
+
+      //ensure the directory exists
+      File dir = new File(file.getParent());
       if (!dir.exists()) {
         dir.mkdirs();
       }
 
       OutputStream fOut = null;
       //String fileName = "thumb-" + UUID.randomUUID().toString() + ".jpeg";
-      //File file = new File(fullPath, fileName);
-      File file = new File(fullPath);
+      
       file.createNewFile();
       fOut = new FileOutputStream(file);
 
