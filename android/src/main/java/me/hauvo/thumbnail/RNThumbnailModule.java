@@ -38,7 +38,7 @@ public class RNThumbnailModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void get(String filePath, String outputPath, Promise promise) {
+  public void get(String filePath, String outputPath, int compressionQualityHint, Promise promise) {
     filePath = filePath.replace("file://","");
     MediaMetadataRetriever retriever = new MediaMetadataRetriever();
     retriever.setDataSource(filePath);
@@ -50,12 +50,7 @@ public class RNThumbnailModule extends ReactContextBaseJavaModule {
     try {
       File file = new File(fullPath);
 
-      if(!file.isFile())
-      {
-        throw new Exception("output path must be a file");
-      }
-
-      //ensure the directory exists
+      //assumes the full path is a file path
       File dir = new File(file.getParent());
       if (!dir.exists()) {
         dir.mkdirs();
@@ -68,7 +63,7 @@ public class RNThumbnailModule extends ReactContextBaseJavaModule {
       fOut = new FileOutputStream(file);
 
       // 100 means no compression, the lower you go, the stronger the compression
-      image.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
+      image.compress(Bitmap.CompressFormat.JPEG, compressionQualityHint, fOut);
       fOut.flush();
       fOut.close();
 
